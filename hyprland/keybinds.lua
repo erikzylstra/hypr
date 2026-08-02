@@ -245,10 +245,12 @@ hl.bind("CTRL + ALT + R",        hl.dsp.exec_cmd("gpu-screen-recorder -w screen 
 hl.bind("SUPER + SHIFT + ALT + R", hl.dsp.exec_cmd("gpu-screen-recorder -w region -f 60 -o ~/Videos"))
 hl.bind("SUPER + SHIFT + C",     hl.dsp.exec_cmd("hyprpicker -a"))
 
--- Voice notes (voxd) — the bash -c wrapper MUST stay (removing it breaks the keybind)
-hl.bind("CTRL + SHIFT + ALT + V", hl.dsp.exec_cmd([[bash -c 'voxd --trigger-record']]))
-hl.bind("SHIFT + ALT + SUPER + f13", hl.dsp.exec_cmd([[bash -c 'voxd --trigger-record']]))
-hl.bind("SHIFT + ALT + SUPER + f14", hl.dsp.exec_cmd([[bash -c 'voxd --trigger-record']]))
+-- Voice notes (voxd) — the bash -c wrapper MUST stay (removing it breaks the keybind).
+-- voxd-record.sh toggles recording exactly like `voxd --trigger-record`, and also
+-- auto-resumes any media that paused itself while the mic was open.
+hl.bind("CTRL + SHIFT + ALT + V", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/voxd-record.sh']]))
+hl.bind("SHIFT + ALT + SUPER + f13", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/voxd-record.sh']]))
+hl.bind("SHIFT + ALT + SUPER + f14", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/voxd-record.sh']]))
 
 hl.bind("ALT + W", hl.dsp.exec_cmd("qs ipc call wallpaperPicker toggle"))
 
@@ -271,8 +273,8 @@ hl.bind("XF86AudioLowerVolume",
 
 hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend-then-hibernate"))
 
-hl.bind("SUPER + V",       hl.dsp.exec_cmd("pkill tofi || cliphist list | tofi | cliphist decode | wl-copy"))
-hl.bind("SUPER + ALT + V", hl.dsp.exec_cmd("pkill tofi || cliphist list | tofi | cliphist delete"))
+hl.bind("SUPER + V",       hl.dsp.exec_cmd([[pkill tofi || cliphist list | sed 's/\t/  /g' | tofi | sed 's/^\([0-9]\+\).*/\1\t/' | cliphist decode | wl-copy]]))
+hl.bind("SUPER + ALT + V", hl.dsp.exec_cmd([[pkill tofi || cliphist list | sed 's/\t/  /g' | tofi | sed 's/^\([0-9]\+\).*/\1\t/' | cliphist delete]]))
 hl.bind("SUPER + Period",  hl.dsp.exec_cmd([[pkill tofi || BEMOJI_PICKER_CMD="tofi" bemoji -t]]))
 -- Alternate paste (same key as voxd voice note above — intentional dual bind)
 hl.bind("CTRL + SHIFT + ALT + V",
