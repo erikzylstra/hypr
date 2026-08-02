@@ -26,3 +26,11 @@ hl.config({
         hotspot_padding = 1,
     },
 })
+
+-- Chocofi only: US-Intl AltGr variant so its French layer's AltGr chords
+-- produce accented characters. Every other keyboard keeps plain "us".
+hl.device({
+    name       = "beekeeb-corne",
+    kb_layout  = "us",
+    kb_variant = "altgr-intl",
+})
