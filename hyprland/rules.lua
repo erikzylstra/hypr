@@ -18,6 +18,7 @@ local window_rules = {
     { match = { class = [[^(google-chrome|chromium)$]] },    workspace = "1" },
     { match = { class = [[^(spotify)$]] },                   workspace = "3 silent" },
     { match = { class = [[^(Postman)$]] },                   workspace = "5 silent" },
+    { match = { class = [[^(org\.telegram\.desktop|TelegramDesktop)$]] }, workspace = "4 silent" },
 
     -- General
     { match = { fullscreen = false }, opacity = tostring(v.window.opacity) .. " override" },
