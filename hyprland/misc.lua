@@ -1,5 +1,5 @@
--- misc + debug. NOTE: vrr = 1 here is the base; user.lua (loaded last) overrides
--- it to 0.
+-- misc + debug. NOTE: vrr = 1 here is the base; user.lua and hosts/<hostname>.lua
+-- (loaded last) override it.
 
 local v = require("variables")
 

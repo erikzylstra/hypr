@@ -23,3 +23,13 @@ require("hyprland.keybinds")
 
 -- Personal overrides, last.
 require("user")
+
+-- Per-machine overrides: hosts/<hostname>.lua, if one exists for this machine.
+do
+    local f = io.open("/etc/hostname", "r")
+    local host = f and f:read("*l"):match("^[^.]+")
+    if f then f:close() end
+    if host and package.searchpath("hosts." .. host, package.path) then
+        require("hosts." .. host)
+    end
+end
