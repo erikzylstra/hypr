@@ -28,11 +28,8 @@ local startup = {
     -- Forward bluetooth media keys to MPRIS
     "mpris-proxy",
 
-    -- Restore last wallpaper
-    [[~/.config/quickshell/scripts/wallpaper -f "$(cat ~/.local/state/caelestia/wallpaper/path.txt 2>/dev/null)"]],
-
-    -- Start the shell (quickshell daemon) — critical
-    "qs -d",
+    -- Start the shell (Noctalia; restores its own wallpaper) — critical
+    "noctalia",
 }
 
 hl.on("hyprland.start", function()

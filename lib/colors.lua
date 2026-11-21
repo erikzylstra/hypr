@@ -1,10 +1,10 @@
 -- Colour scheme loader.
 --
--- `scheme/current.conf` is generated externally (by quickshell/caelestia today,
--- and seeded from `scheme/default.conf`). It is hyprlang `$key = hexvalue` lines,
--- NOT Lua, so we parse it at config-eval time. Colours therefore refresh on a
--- manual `hyprctl reload` after a theme change (live re-theming is intentionally
--- not wired up — caelestia is being phased out).
+-- `scheme/noctalia.conf` is rendered by a Noctalia user template
+-- (~/.config/noctalia/templates/hyprland-scheme.conf), which runs `hyprctl reload`
+-- on every wallpaper/theme change. `scheme/default.conf` is the fallback until
+-- Noctalia has rendered it. Both are hyprlang `$key = hexvalue` lines, NOT Lua,
+-- so we parse them at config-eval time.
 --
 -- The old hyprlang configs used string-concatenation inside rgba(), e.g.
 -- `rgba($surfaced4)` meant `$surface` ("0b0f10") + alpha "d4" -> "rgba(0b0f10d4)".
@@ -28,11 +28,11 @@ local function parse(path)
     return map
 end
 
-local map = parse(config_dir .. "/scheme/current.conf")
+local map = parse(config_dir .. "/scheme/noctalia.conf")
     or parse(config_dir .. "/scheme/default.conf")
 
 if not map then
-    error("hypr colors: could not read scheme/current.conf or scheme/default.conf "
+    error("hypr colors: could not read scheme/noctalia.conf or scheme/default.conf "
         .. "(is io available in the Hyprland Lua sandbox?)")
 end
 

@@ -22,7 +22,7 @@ local window_rules = {
 
     -- General
     { match = { fullscreen = false }, opacity = tostring(v.window.opacity) .. " override" },
-    { match = { class = [[(foot|equibop|org\.quickshell|imv|swappy)]] }, opaque = true },
+    { match = { class = [[(foot|equibop|imv|swappy)]] }, opaque = true },
     -- Center floating windows (not xwayland, to avoid popups)
     { match = { float = true, xwayland = false }, center = true },
 
@@ -38,7 +38,6 @@ local window_rules = {
     { match = { class = "feh" },                                 float = true },
     { match = { class = "imv" },                                 float = true },
     { match = { class = "system-config-printer" },               float = true },
-    { match = { class = [[org\.quickshell]] },                   float = true },
 
     -- Float, resize and center
     { match = { class = "foot", title = "nmtui" },              float = true, size = "60% 70%", center = true },
@@ -116,10 +115,12 @@ local layer_rules = {
     -- Fuzzel / launcher
     { match = { namespace = "launcher" }, animation = "popin 80%", blur = true },
 
-    -- Shell (caelestia — to remove when caelestia is fully phased out)
-    { match = { namespace = [[caelestia-(border-exclusion|area-picker)]] }, no_anim = true },
-    { match = { namespace = [[caelestia-(drawers|background)]] },           animation = "fade" },
-    { match = { namespace = "caelestia-drawers" }, blur = true, ignore_alpha = 0.57 },
+    -- Shell: blur Noctalia's surfaces, as Noctalia's Hyprland guide suggests
+    {
+        match = { namespace = [[^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$]] },
+        blur = true,
+        no_anim = true,
+    },
 }
 
 for _, r in ipairs(layer_rules) do

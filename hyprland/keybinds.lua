@@ -14,8 +14,9 @@ local v = require("variables")
 -- Helpers / flag presets
 ----------------------------------------------------------------------
 
-local function caelestia(name)
-	return hl.dsp.global("caelestia:" .. name)
+-- Send a command to the running Noctalia shell (see `noctalia msg --help`).
+local function noctalia(cmd)
+	return hl.dsp.exec_cmd("noctalia msg " .. cmd)
 end
 
 -- resize/move "exact" used to take percentages; native hl.dsp.window.resize/move
@@ -52,70 +53,39 @@ local LOCKED_REPEAT = { locked = true, repeating = true }
 local REPEAT = { repeating = true }
 local RELEASE = { release = true }
 local MOUSE = { mouse = true }
-local INTERRUPT = { ignore_mods = true, non_consuming = true } -- was `bindin`
 
 ----------------------------------------------------------------------
--- Shell: launcher + launcher-interrupt
+-- Shell (Noctalia)
 ----------------------------------------------------------------------
 
-hl.bind("SUPER + L", caelestia("launcher"))
-
--- While the launcher is open, any of these (with SUPER held) interrupt it
--- without being consumed. The literal `catchall` key (match any key) is only
--- allowed inside a submap, so it lives in a one-bind submap marked
--- submap_universal so it stays active in the default map too.
-hl.define_submap("launcher-interrupt", function()
-	hl.bind(
-		"SUPER + catchall",
-		caelestia("launcherInterrupt"),
-		{ ignore_mods = true, non_consuming = true, submap_universal = true }
-	)
-end)
-
-local interrupt_keys = {
-	"mouse:272",
-	"mouse:273",
-	"mouse:274",
-	"mouse:275",
-	"mouse:276",
-	"mouse:277",
-	"mouse_up",
-	"mouse_down",
-}
-for _, k in ipairs(interrupt_keys) do
-	hl.bind("SUPER + " .. k, caelestia("launcherInterrupt"), INTERRUPT)
-end
-
+hl.bind("SUPER + L", noctalia("panel-toggle launcher"))
 hl.bind("SUPER + T", hl.dsp.exec_cmd([[tofi-run | xargs -r -I{} hyprctl dispatch 'hl.dsp.exec_cmd("{}")']]))
 
-----------------------------------------------------------------------
--- Shell: misc + media (caelestia globals)
-----------------------------------------------------------------------
-
-hl.bind(v.keys.session, caelestia("session"))
-hl.bind(v.keys.clearNotifs, caelestia("clearNotifs"), LOCKED)
-hl.bind(v.keys.showPanels, caelestia("showall"))
-hl.bind("SUPER + C", caelestia("calendarPopup"))
+hl.bind(v.keys.session, noctalia("panel-toggle session"))
+hl.bind(v.keys.clearNotifs, noctalia("notification-clear-history"), LOCKED)
+hl.bind(v.keys.showPanels, noctalia("panel-toggle control-center"))
+hl.bind("SUPER + C", noctalia("panel-toggle control-center"))
+hl.bind("ALT + W", noctalia("panel-toggle wallpaper"))
 
 local media = {
-	{ "XF86MonBrightnessUp", "brightnessUp" },
-	{ "XF86MonBrightnessDown", "brightnessDown" },
-	{ "CTRL + SUPER + Space", "mediaToggle" },
-	{ "XF86AudioPlay", "mediaToggle" },
-	{ "XF86AudioPause", "mediaToggle" },
-	{ "CTRL + SUPER + Equal", "mediaNext" },
-	{ "XF86AudioNext", "mediaNext" },
-	{ "CTRL + SUPER + Minus", "mediaPrev" },
-	{ "XF86AudioPrev", "mediaPrev" },
-	{ "XF86AudioStop", "mediaStop" },
+	{ "XF86MonBrightnessUp", "brightness-up" },
+	{ "XF86MonBrightnessDown", "brightness-down" },
+	{ "CTRL + SUPER + Space", "media toggle" },
+	{ "XF86AudioPlay", "media toggle" },
+	{ "XF86AudioPause", "media toggle" },
+	{ "CTRL + SUPER + Equal", "media next" },
+	{ "XF86AudioNext", "media next" },
+	{ "CTRL + SUPER + Minus", "media previous" },
+	{ "XF86AudioPrev", "media previous" },
+	{ "XF86AudioStop", "media stop" },
 }
 for _, m in ipairs(media) do
-	hl.bind(m[1], caelestia(m[2]), LOCKED)
+	hl.bind(m[1], noctalia(m[2]), LOCKED)
 end
 
--- Kill/restart quickshell
-hl.bind("CTRL + SUPER + SHIFT + R", hl.dsp.exec_cmd("qs kill"), RELEASE)
-hl.bind("CTRL + SUPER + ALT + R", hl.dsp.exec_cmd("qs kill; qs -d"), RELEASE)
+-- Kill/restart the shell
+hl.bind("CTRL + SUPER + SHIFT + R", hl.dsp.exec_cmd("pkill -x noctalia"), RELEASE)
+hl.bind("CTRL + SUPER + ALT + R", hl.dsp.exec_cmd("pkill -x noctalia; noctalia"), RELEASE)
 
 ----------------------------------------------------------------------
 -- Workspaces (inlined wsaction.fish group-math, no subprocess)
@@ -295,8 +265,6 @@ hl.bind("CTRL + SHIFT + ALT + V", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scri
 hl.bind("SHIFT + ALT + SUPER + f13", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/voxd-record.sh']]))
 hl.bind("SHIFT + ALT + SUPER + f14", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/voxd-record.sh']]))
 
-hl.bind("ALT + W", hl.dsp.exec_cmd("qs ipc call wallpaperPicker toggle"))
-
 ----------------------------------------------------------------------
 -- Volume
 ----------------------------------------------------------------------
@@ -319,10 +287,16 @@ hl.bind(
 )
 
 ----------------------------------------------------------------------
--- Sleep + clipboard/emoji
+-- Lock/sleep + clipboard/emoji
 ----------------------------------------------------------------------
 
-hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend-then-hibernate"))
+hl.bind("SUPER + ALT + L", noctalia("session lock"))
+-- Lock first and let the lock screen finish drawing before suspending.
+-- Noctalia's own lock-before-suspend releases the sleep inhibitor as soon as
+-- the session reports locked, while its enter transition may still be running;
+-- a frame frozen mid-transition shows the desktop on resume. See also
+-- ~/.config/noctalia/lockscreen.toml.
+hl.bind("SUPER + SHIFT + L", hl.dsp.exec_cmd("noctalia msg session lock; sleep 0.5; systemctl suspend-then-hibernate"))
 
 hl.bind(
 	"SUPER + V",
