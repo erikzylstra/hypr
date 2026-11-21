@@ -65,6 +65,16 @@ if [ "${1:-}" = "--watch" ]; then
     exit 0
 fi
 
+# ---- push-to-talk modes (hold key) -----------------------------------------
+# --start only starts if idle; --stop only stops if recording. Keeps a
+# press/release keybind pair from ever desyncing into "inverted" toggling.
+MODE="${1:-}"
+if [ "$MODE" = "--start" ] && [ -d "$LOCKDIR" ]; then exit 0; fi
+if [ "$MODE" = "--stop" ]; then
+    [ -d "$LOCKDIR" ] && voxd --trigger-record
+    exit 0
+fi
+
 # ---- toggle press -----------------------------------------------------------
 if mkdir "$LOCKDIR" 2>/dev/null; then
     # START: snapshot players that are Playing *now* (before the mic pauses
