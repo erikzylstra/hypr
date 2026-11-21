@@ -27,5 +27,8 @@ hl.config({
     debug = {
         vfr            = true,
         error_position = 1,
+        -- Keep the runtime log (focus/layer events) so scripts/focus-debug.sh
+        -- has something to capture when input breaks. Lives in tmpfs.
+        disable_logs   = false,
     },
 })

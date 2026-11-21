@@ -42,5 +42,5 @@ hl.gesture({
 hl.gesture({
     fingers   = v.touchpad.gestureFingersMore,
     direction = "down",
-    action    = function() hl.dispatch(hl.dsp.exec_cmd("systemctl suspend-then-hibernate")) end,
+    action    = function() hl.dispatch(hl.dsp.exec_cmd("systemctl suspend")) end,
 })
