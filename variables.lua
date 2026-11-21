@@ -42,15 +42,15 @@ return {
     },
 
     gaps = {
-        workspace       = 8,
-        windowIn        = 6,
-        windowOut       = 8,
-        singleWindowOut = 8,
+        workspace       = 4,
+        windowIn        = 3,
+        windowOut       = 4,
+        singleWindowOut = 4,
     },
 
     window = {
         opacity       = 0.95,
-        rounding      = 10,
+        rounding      = 6,
         borderSize    = 2,
         activeBorder   = colors.rgba("primary", "e6"),
         inactiveBorder = colors.rgba("onSurfaceVariant", "11"),
