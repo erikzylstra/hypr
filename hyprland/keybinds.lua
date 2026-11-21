@@ -66,6 +66,8 @@ hl.bind(v.keys.clearNotifs, noctalia("notification-clear-history"), LOCKED)
 hl.bind(v.keys.showPanels, noctalia("panel-toggle control-center"))
 hl.bind("SUPER + C", noctalia("panel-toggle control-center"))
 hl.bind("ALT + W", noctalia("panel-toggle wallpaper"))
+-- Pin the bar visible / return it to show-on-hover
+hl.bind("SUPER + B", hl.dsp.exec_cmd([[bash -c '~/.config/hypr/scripts/bar-toggle.sh']]))
 
 local media = {
 	{ "XF86MonBrightnessUp", "brightness-up" },
