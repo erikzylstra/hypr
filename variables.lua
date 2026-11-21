@@ -103,7 +103,9 @@ return {
         fileExplorer = "ALT + T",
         notes        = "ALT + N",
 
-        session     = "CTRL + ALT + Delete",
+        -- Was CTRL + ALT + Delete: on the Corne, Delete is on the _ACT layer,
+        -- away from the home-row Ctrl/Alt, so the chord was hard to reach.
+        session     = "SUPER + X",
         clearNotifs = "CTRL + ALT + C",
         showPanels  = "SUPER + K",
     },

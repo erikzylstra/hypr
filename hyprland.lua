@@ -19,6 +19,8 @@ require("hyprland.group")
 require("hyprland.execs")
 require("hyprland.rules")
 require("hyprland.gestures")
+-- Records every bind for the SUPER+H cheat sheet; must load before any binds.
+local cheatsheet = require("lib.cheatsheet")
 require("hyprland.keybinds")
 
 -- Personal overrides, last.
@@ -33,3 +35,6 @@ do
         require("hosts." .. host)
     end
 end
+
+-- All binds are in; write the cheat sheet list.
+cheatsheet.write()
