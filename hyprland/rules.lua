@@ -119,6 +119,7 @@ local layer_rules = {
     {
         match = { namespace = [[^noctalia-(bar-.+|notification|dock|panel|attached-panel|osd|window-switcher)$]] },
         blur = true,
+        ignore_alpha = 0, -- don't blur fully transparent areas (e.g. the auto-hidden bar)
         no_anim = true,
     },
 }
