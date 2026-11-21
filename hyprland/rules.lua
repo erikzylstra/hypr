@@ -23,6 +23,9 @@ local window_rules = {
     -- General
     { match = { fullscreen = false }, opacity = tostring(v.window.opacity) .. " override" },
     { match = { class = [[(foot|equibop|imv|swappy)]] }, opaque = true },
+    -- Global touchpad scroll_factor is 0.3; terminals (foot -> zellij) quantize
+    -- that into very few wheel events, so give foot a faster touchpad scroll.
+    { match = { class = [[^(foot)$]] }, scroll_touchpad = 2.0 },
     -- Center floating windows (not xwayland, to avoid popups)
     { match = { float = true, xwayland = false }, center = true },
 
